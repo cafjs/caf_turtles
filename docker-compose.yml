@@ -1,0 +1,11 @@
+app:
+  image: registry.cafjs.com:32000/root-turtles
+  links: ["redis"]
+  net: "bridge"
+  ports:
+    - "127.0.0.1:3005:3000"
+  environment:
+    - DOCKER_APP_INTERNAL_PORT=3000
+    - PORT0=3005
+redis:
+  image: redis:2.8

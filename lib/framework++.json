@@ -1,0 +1,62 @@
+{
+    "name": "top",
+    "env" : {
+        "appPublisher" :"process.env.APP_PUBLISHER||root",
+        "appLocalName" : "process.env.APP_LOCAL_NAME||turtles",
+        "appSuffix" : "process.env.APP_SUFFIX||cafjs.com"
+     },
+    "components": [
+        {
+            "name": "log",
+            "env" : {
+                "logLevel" : "DEBUG"
+            }
+        },
+        {
+            "name": "cp2"
+        },
+        {
+            "module": "caf_deploy#plug",
+            "name": "deploy",
+            "description": "Shared plug to deploy apps in Mesos/Marathon\n Properties: \n",
+            "env": {
+                "listAllRedisPorts" : "process.env.LIST_ALL_REDIS_PORTS||false",
+                "refreshInterval" : "process.env.REFRESH_INTERVAL||1000",
+                "protocol" : "process.env.MARATHON_PROTOCOL||http",
+                "hostname" : "process.env.HOST||localhost",
+                "port" : "process.env.MARATHON_PORT||8080",
+                "username" : "process.env.MARATHON_USERNAME||root",
+                "password" : "process.env.MARATHON_KEY_PASSWORD||pleasechange",
+                "redis" : {
+                    "templateFile" : "process.env.REDIS_TEMPLATE_FILE||marathon.redis.mus",
+                    "prefixID": "process.env.REDIS_PREFIX_ID||redis",
+                    "rangePortStart" : "process.env.REDIS_RANGE_PORT_START||7380",
+                    "rangePortEnd" : "process.env.REDIS_RANGE_PORT_END||7480",
+                    "hostname" : "process.env.REDIS_HOSTNAME||10.0.0.15",
+                    "image" : "process.env.REDIS_IMAGE||redis:2.8",
+                    "cpus" : "process.env.REDIS_CPUS||0.1",
+                    "memory" : "process.env.REDIS_MEMORY||64.0"
+                },
+                "app" : {
+                    "templateFile" : "process.env.APP_TEMPLATE_FILE||marathon.app.mus",
+                    "args": "process.env.APP_ARGS||[]",
+                    "cpus" : "process.env.APP_CPUS||0.1",
+                    "memory" : "process.env.APP_MEMORY||64.0",
+                    "instances": "process.env.APP_INSTANCES||1",
+                    "services" :["redis"]
+                }
+            }
+        },
+        {
+            "name" : "react",
+            "module": "caf_react#plug",
+            "description": "React.js background rendering",
+            "env": {
+                "appFileName" : "../public/index.html",
+                "separator" : "<section id=\"content\">",
+                "cacheService" : "cp",
+                "expiresInSec" : 60
+            }
+        }
+    ]
+}
