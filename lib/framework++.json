@@ -41,7 +41,7 @@
                     "templateFile" : "process.env.APP_TEMPLATE_FILE||marathon.app.mus",
                     "args": "process.env.APP_ARGS||[]",
                     "cpus" : "process.env.APP_CPUS||0.1",
-                    "memory" : "process.env.APP_MEMORY||64.0",
+                    "memory" : "process.env.APP_MEMORY||128.0",
                     "instances": "process.env.APP_INSTANCES||1",
                     "services" :["redis"]
                 }
