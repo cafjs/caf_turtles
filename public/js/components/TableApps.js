@@ -41,7 +41,7 @@ var TableApps = {
                         cE('th', {key:7}, 'Version')
                        )
                     ),
-                  cE('tbody', {key:7}, renderRows())
+                  cE('tbody', {key:8}, renderRows())
                  );
     }
 };
