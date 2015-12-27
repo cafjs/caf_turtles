@@ -1,7 +1,7 @@
 {
   "name": "caf_turtles",
   "description": "Cloud Assistants Turtles deployer example",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "Antonio Lain <antlai@cafjs.com>",
   "dependencies": {
       "caf_react" :"^0.2.0",
@@ -11,7 +11,7 @@
       "caf_cli": "^0.2.0",
       "react" : "^0.14.0",
       "react-dom" : "^0.14.0",
-      "react-bootstrap" : "^0.27.3",
+      "react-bootstrap" : "^0.28.1",
       "flux": "^2.0.2",
       "keymirror": "^0.1.0",
       "eventemitter2" : "^0.4.14"
