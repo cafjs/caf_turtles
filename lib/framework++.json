@@ -39,7 +39,7 @@
                 },
                 "app" : {
                     "templateFile" : "process.env.APP_TEMPLATE_FILE||marathon.app.mus",
-                    "args": "process.env.APP_ARGS||[]",
+                    "args": "process.env.APP_ARGS||[\"--max_old_space_size=96\", \"./index.js\"]",
                     "cpus" : "process.env.APP_CPUS||0.1",
                     "memory" : "process.env.APP_MEMORY||128.0",
                     "instances": "process.env.APP_INSTANCES||1",
