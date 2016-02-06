@@ -18,4 +18,6 @@ COPY . /usr/src/app
 
 RUN  touch /usr/src/app/http_proxy_build; . /usr/src/app/http_proxy_build;  rm -fr node_modules/*; rm -f npm-shrinkwrap.json; if test -f all.tgz; then tar xvf all.tgz; fi; npm install  . ; npm run build ;  rm -fr node_modules/browserify  node_modules/uglify-js; rm -f all.tgz
 
-CMD [ "npm", "start" ]
+ENTRYPOINT ["node"]
+
+CMD [ "./index.js" ]
