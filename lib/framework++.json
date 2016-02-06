@@ -30,9 +30,9 @@
                 "redis" : {
                     "templateFile" : "process.env.REDIS_TEMPLATE_FILE||marathon.redis.mus",
                     "prefixID": "process.env.REDIS_PREFIX_ID||redis",
-                    "rangePortStart" : "process.env.REDIS_RANGE_PORT_START||7380",
+                    "rangePortStart" : "process.env.REDIS_RANGE_PORT_START||7381",
                     "rangePortEnd" : "process.env.REDIS_RANGE_PORT_END||7480",
-                    "hostname" : "process.env.REDIS_HOSTNAME||10.0.0.15",
+                    "hostname" : "process.env.REDIS_HOSTNAME||10.240.0.3",
                     "image" : "process.env.REDIS_IMAGE||redis:2.8",
                     "cpus" : "process.env.REDIS_CPUS||0.1",
                     "memory" : "process.env.REDIS_MEMORY||64.0"
