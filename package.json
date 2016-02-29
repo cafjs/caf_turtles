@@ -1,7 +1,7 @@
 {
   "name": "caf_turtles",
   "description": "Cloud Assistants Turtles deployer example",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "author": "Antonio Lain <antlai@cafjs.com>",
   "dependencies": {
       "caf_react" :"^0.2.0",
@@ -18,7 +18,7 @@
    },
     "devDependencies": {
         "nodeunit" : ">=0.9",
-        "browserify" : "^8.1.0",
+        "browserify" : "^13.0.0",
         "uglify-js" : "^2.4.0"
     },
     "scripts": {

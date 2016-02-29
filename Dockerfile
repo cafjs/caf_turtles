@@ -6,7 +6,7 @@
 # TO_RUN:         docker run -p <app_port>:3000 -e DOCKER_APP_INTERNAL_PORT=3000 -e PORT0=<app_port> -e HOST=<host_ip> -e REDIS_PORT_6379_TCP_PORT=<redis_port>   registry.cafjs.com:32000/root-turtles
 
 
-FROM node:0.10
+FROM node:4.3
 
 EXPOSE 3000
 
@@ -16,7 +16,7 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
-RUN  touch /usr/src/app/http_proxy_build; . /usr/src/app/http_proxy_build;  rm -fr node_modules/*; rm -f npm-shrinkwrap.json; if test -f all.tgz; then tar xvf all.tgz; fi; npm install  . ; npm run build ;  rm -fr node_modules/browserify  node_modules/uglify-js; rm -f all.tgz
+RUN  touch /usr/src/app/http_proxy_build; . /usr/src/app/http_proxy_build;  rm -fr node_modules/*; rm -f npm-shrinkwrap.json; if test -f all.tgz; then tar zxvf all.tgz; fi; npm install  . ; npm run build ;  rm -fr node_modules/browserify  node_modules/uglify-js; rm -f all.tgz
 
 ENTRYPOINT ["node"]
 
