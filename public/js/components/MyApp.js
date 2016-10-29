@@ -82,7 +82,7 @@ var MyApp = {
     render: function() {
         return cE("div", {className: "container-fluid"},
                   cE(NewError, {error: this.state.error}),
-                  cE(rB.Panel, {header: cE(rB.Grid, null,
+                  cE(rB.Panel, {header: cE(rB.Grid, {fluid: true},
                                            cE(rB.Row, null,
                                               cE(rB.Col, {sm:1, xs:1},
                                                  cE(AppStatus, {
@@ -108,7 +108,7 @@ var MyApp = {
                                           )
                                },
                      cE(rB.Panel, {header: "Manage Applications"},
-                        cE(rB.Grid, null,
+                        cE(rB.Grid, {fluid: true},
                            cE(rB.Row, null,
                               cE(rB.Col, { xs:12, sm:4},
                                  cE(rB.Input, {
