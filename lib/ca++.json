@@ -39,6 +39,17 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "handler",
+            "components" : [
+                {
+                    "name": "props",
+                    "env" : {
+                        "pulsesForTimeout": "process.env.PULSES_FOR_TIMEOUT||20"
+                    }
+                }
+            ]
         }
     ]
 }

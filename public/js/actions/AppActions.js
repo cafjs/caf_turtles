@@ -62,26 +62,27 @@ var AppActions = {
     },
     resetError: function() {
         errorF(null);
+        AppActions.cleanError();
     },
     setError: function(err) {
         errorF(err);
     }
 };
 
-['addApp', 'deleteApp', 'flexApp', 'restartApp', 'statApps', 'getState']
-    .forEach(function(x) {
-        AppActions[x] = function() {
-            var args = Array.prototype.slice.call(arguments);
-            args.push(function(err, data) {
-                if (err) {
-                    errorF(err);
-                } else {
-                    updateF(data);
-                }
-            });
-            AppSession[x].apply(AppSession, args);
-        };
-    });
+['addApp', 'cleanError', 'deleteApp', 'flexApp', 'restartApp', 'statApps',
+ 'getState'].forEach(function(x) {
+     AppActions[x] = function() {
+         var args = Array.prototype.slice.call(arguments);
+         args.push(function(err, data) {
+             if (err) {
+                 errorF(err);
+             } else {
+                 updateF(data);
+             }
+         });
+         AppSession[x].apply(AppSession, args);
+     };
+ });
 
 
 AppSession.onmessage = function(msg) {
