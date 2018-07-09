@@ -3,7 +3,7 @@
     "env" : {
         "appPublisher" :"process.env.APP_PUBLISHER||root",
         "appLocalName" : "process.env.APP_LOCAL_NAME||turtles",
-        "appSuffix" : "process.env.APP_SUFFIX||cafjs.com"
+        "appSuffix" : "process.env.APP_SUFFIX||uhdia.com"
      },
     "components": [
         {
@@ -18,30 +18,30 @@
         {
             "module": "caf_deploy#plug",
             "name": "deploy",
-            "description": "Shared plug to deploy apps in Mesos/Marathon\n Properties: \n",
+            "description": "Shared plug to deploy apps in Kubernetes\n Properties: \n",
             "env": {
-                "listAllRedisPorts" : "process.env.LIST_ALL_REDIS_PORTS||false",
+                "targetPaaS": "process.env.TARGET_PAAS||kubernetes",
                 "refreshInterval" : "process.env.REFRESH_INTERVAL||1000",
-                "protocol" : "process.env.MARATHON_PROTOCOL||http",
-                "hostname" : "process.env.HOST||localhost",
-                "port" : "process.env.MARATHON_PORT||8080",
-                "username" : "process.env.MARATHON_USERNAME||root",
-                "password" : "process.env.MARATHON_KEY_PASSWORD||pleasechange",
+                "useK8SConfig" : "process.env.USE_K8S_CONFIG||false",
                 "redis" : {
-                    "templateFile" : "process.env.REDIS_TEMPLATE_FILE||marathon.redis.mus",
-                    "prefixID": "process.env.REDIS_PREFIX_ID||redis",
-                    "rangePortStart" : "process.env.REDIS_RANGE_PORT_START||7381",
-                    "rangePortEnd" : "process.env.REDIS_RANGE_PORT_END||7480",
-                    "image" : "process.env.REDIS_IMAGE||redis:2.8",
-                    "cpus" : "process.env.REDIS_CPUS||0.01",
-                    "memory" : "process.env.REDIS_MEMORY||64.0"
+                    "k8SNamespace" : "process.env.REDIS_K8S_NAMESPACE||redis",
+                    "templateFile" : "process.env.REDIS_TEMPLATE_FILE||kubernetes.redis.mus",
+                    "image" : "process.env.REDIS_IMAGE||redis:3",
+                    "cpus" : "process.env.REDIS_CPUS||0.02",
+                    "memory" : "process.env.REDIS_MEMORY||64.0",
+                    "memoryLimit" : "process.env.REDIS_MEMORY_LIMIT||128.0"
                 },
                 "app" : {
-                    "templateFile" : "process.env.APP_TEMPLATE_FILE||marathon.app.mus",
+                    "k8SNamespace" : "process.env.APP_K8S_NAMESPACE||apps",
+                    "templateFile" : "process.env.APP_TEMPLATE_FILE||kubernetes.app.mus",
+                    "cpus" : "process.env.APP_CPUS||0.02",
                     "args": "process.env.APP_ARGS||[\"--max_old_space_size=96\", \"./index.js\"]",
-                    "cpus" : "process.env.APP_CPUS||0.01",
-                    "memory" : "process.env.APP_MEMORY||128.0",
+                    "memory" : "process.env.APP_MEMORY||96.0",
+                    "memoryLimit" : "process.env.APP_MEMORY_LIMIT||128.0",
                     "instances": "process.env.APP_INSTANCES||1",
+                    "isDeployer": "process.env.APP_IS_DEPLOYER||false",
+                    "isAccounts": "process.env.APP_IS_ACCOUNTS||false",
+                    "appSuffix" : "process.env.APP_SUFFIX||uhdia.com",
                     "services" :["redis"]
                 }
             }

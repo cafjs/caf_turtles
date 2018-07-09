@@ -126,7 +126,7 @@ var MyApp = {
                                      value: this.state.image,
                                      label: 'Docker image',
                                      ref: 'image',
-                                     placeholder: 'registry.cafjs.com:32000/root-helloworld',
+                                     placeholder: 'gcr.io/cafjs-k8/root-helloworld',
                                      onChange: this.handleImageChange
                                  })
                                 ),

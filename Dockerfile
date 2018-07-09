@@ -2,8 +2,8 @@
 # DOCKER-VERSION  1.7.0
 # AUTHOR:         Antonio Lain <antlai@cafjs.com>
 # DESCRIPTION:    Cloud Assistants application turtles
-# TO_BUILD:        cafjs mkImage . registry.cafjs.com:32000/root-turtles
-# TO_RUN:         cafjs run --appImage registry.cafjs.com:32000/root-turtles turtles
+# TO_BUILD:        cafjs mkImage . gcr.io/cafjs-k8/root-turtles
+# TO_RUN:         cafjs run --appImage gcr.io/cafjs-k8/root-turtles turtles
 
 FROM node:8
 
