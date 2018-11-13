@@ -1,4 +1,4 @@
-
+'use strict';
 
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -6,29 +6,25 @@ var ReactServer = require('react-dom/server');
 var AppSession = require('./session/AppSession');
 var MyApp = require('./components/MyApp');
 var AppActions = require('./actions/AppActions');
-
+var redux = require('redux');
+var AppReducer = require('./reducers/AppReducer');
 var cE = React.createElement;
 
-AppSession.onopen = function() {
-    console.log('open session');
-    AppActions.init(function(err) {
-//        console.log('Cannot connect:' + err);
-        // render error or real data
-        ReactDOM.render(
-            cE(MyApp, null),
-            document.getElementById('content')
-        );
-    });
-};
-
-
 var main = exports.main = function(data) {
+    var ctx =  {store: redux.createStore(AppReducer)};
     if (typeof window === 'undefined') {
         // server side rendering
-        AppActions.initServer(data);
-        return ReactServer.renderToString(cE(MyApp, null));
+        AppActions.initServer(ctx, data);
+        return ReactServer.renderToString(cE(MyApp, {ctx: ctx}));
     } else {
-        console.log('Hello');
-        return null;
+        return (async function() {
+            try {
+                await AppSession.connect(ctx);
+                ReactDOM.hydrate(cE(MyApp, {ctx: ctx}),
+                                 document.getElementById('content'));
+            } catch (err) {
+                console.log('Cannot connect:' + err);
+            }
+        })();
     }
 };

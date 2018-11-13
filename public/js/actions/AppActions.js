@@ -1,100 +1,93 @@
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var AppConstants = require('../constants/AppConstants');
-var AppSession = require('../session/AppSession');
-//var json_rpc = require('caf_transport').json_rpc;
+'use strict';
 
-var updateF = function(state) {
+var AppConstants = require('../constants/AppConstants');
+var json_rpc = require('caf_transport').json_rpc;
+
+var updateF = function(store, state) {
     var d = {
-        actionType: AppConstants.APP_UPDATE,
+        type: AppConstants.APP_UPDATE,
         state: state
     };
-    AppDispatcher.dispatch(d);
+    store.dispatch(d);
 };
 
 
-var errorF =  function(err) {
+var errorF =  function(store, err) {
     var d = {
-        actionType: AppConstants.APP_ERROR,
+        type: AppConstants.APP_ERROR,
         error: err
     };
-    AppDispatcher.dispatch(d);
+    store.dispatch(d);
 };
 
-/*
+
 var getNotifData = function(msg) {
     return json_rpc.getMethodArgs(msg)[0];
 };
 
-var notifyF = function(message) {
+var notifyF = function(store, message) {
     var d = {
-        actionType: AppConstants.APP_NOTIFICATION,
+        type: AppConstants.APP_NOTIFICATION,
         state: getNotifData(message)
     };
-    AppDispatcher.dispatch(d);
+    store.dispatch(d);
 };
-*/
 
-var wsStatusF =  function(isClosed) {
+
+var wsStatusF =  function(store, isClosed) {
     var d = {
-        actionType: AppConstants.WS_STATUS,
+        type: AppConstants.WS_STATUS,
         isClosed: isClosed
     };
-    AppDispatcher.dispatch(d);
+    store.dispatch(d);
 };
 
 var AppActions = {
-    initServer: function(initialData) {
-        updateF(initialData);
+    initServer: function(ctx, initialData) {
+        updateF(ctx.store, initialData);
     },
-    init: function(cb) {
-        AppSession.hello(AppSession.getCacheKey(),
-                         function(err, data) {
-                             if (err) {
-                                 errorF(err);
-                             } else {
-                                 updateF(data);
-                             }
-                             cb(err, data);
-                         });
+    async init(ctx) {
+        try {
+            var data = await ctx.session.hello(ctx.session.getCacheKey())
+                    .getPromise();
+            updateF(ctx.store, data);
+        } catch (err) {
+            errorF(ctx.store, err);
+        }
     },
-    setLocalState: function(data) {
-        updateF(data);
+    message:  function(ctx, msg) {
+        notifyF(ctx.store, msg);
     },
-    resetError: function() {
-        errorF(null);
-        AppActions.cleanError();
+    closing:  function(ctx, err) {
+        console.log('Closing:' + JSON.stringify(err));
+        wsStatusF(ctx.store, true);
     },
-    setError: function(err) {
-        errorF(err);
+    setLocalState(ctx, data) {
+        updateF(ctx.store, data);
+    },
+    resetError(ctx) {
+        errorF(ctx.store, null);
+        AppActions.cleanError(ctx);
+    },
+    setError(ctx, err) {
+        errorF(ctx.store, err);
     }
 };
 
 ['addApp', 'cleanError', 'deleteApp', 'flexApp', 'restartApp', 'statApps',
  'getState'].forEach(function(x) {
-     AppActions[x] = function() {
+     AppActions[x] = async function() {
          var args = Array.prototype.slice.call(arguments);
-         args.push(function(err, data) {
-             if (err) {
-                 errorF(err);
-             } else {
-                 updateF(data);
-             }
-         });
-         AppSession[x].apply(AppSession, args);
+         var ctx = args.shift();
+         try {
+             var data =  await ctx.session[x].apply(ctx.session, args)
+                     .getPromise();
+             updateF(ctx.store, data);
+         } catch (err) {
+             errorF(ctx.store, err);
+         }
      };
  });
-
-
-AppSession.onmessage = function(msg) {
-    console.log('message:' + JSON.stringify(msg));
-    AppActions.getState();
-//    notifyF(msg);
-};
-
-AppSession.onclose = function(err) {
-    console.log('Closing:' + JSON.stringify(err));
-    wsStatusF(true);
-};
 
 
 module.exports = AppActions;
