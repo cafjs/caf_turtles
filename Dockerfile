@@ -5,7 +5,7 @@
 # TO_BUILD:        cafjs mkImage . gcr.io/cafjs-k8/root-turtles
 # TO_RUN:         cafjs run --appImage gcr.io/cafjs-k8/root-turtles turtles
 
-FROM node:8
+FROM node:10
 
 EXPOSE 3000
 
