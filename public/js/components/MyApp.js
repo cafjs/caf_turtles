@@ -74,6 +74,7 @@ class MyApp extends React.Component {
                                   appName: this.state.appName,
                                   image: this.state.image,
                                   instances: this.state.instances,
+                                  privileged: this.state.privileged,
                                   op: this.state.op
                               })
                              )

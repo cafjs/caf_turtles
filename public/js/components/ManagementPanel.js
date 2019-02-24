@@ -143,6 +143,7 @@ class ManagementPanel extends React.Component {
                   cE(rB.FormControl, {
                       type: 'text',
                       value: this.props.instances,
+                      readOnly: !this.props.privileged,
                       placeholder: '1',
                       onChange: this.handleInstancesChange
                   })
