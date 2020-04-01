@@ -1,9 +1,9 @@
-# CAF (Cloud Assistant Framework)
+# Caf.js
 
-Co-design permanent, active, stateful, reliable cloud proxies with your web app.
+Co-design permanent, active, stateful, reliable cloud proxies with your web app and gadgets.
 
-See http://www.cafjs.com 
+See https://www.cafjs.com
 
-## CAF deployer app: Turtles
+## Turtles: A Deployer Application
 
-Deploys CAF apps using Docker containers and a Mesos/Marathon cluster. 
+Deploys `Caf.js` apps using Docker containers and a Kubernetes cluster.
