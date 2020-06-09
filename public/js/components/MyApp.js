@@ -75,6 +75,7 @@ class MyApp extends React.Component {
                                   image: this.state.image,
                                   instances: this.state.instances,
                                   privileged: this.state.privileged,
+                                  isUntrusted: this.state.isUntrusted,
                                   op: this.state.op
                               })
                              )

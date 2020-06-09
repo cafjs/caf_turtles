@@ -22,6 +22,8 @@ class TableApps extends React.Component {
 //                       cE('td', {key:10*i+2}, app.id),
                        cE('td', {key:10*i+4}, app.instances),
                        cE('td', runningStyle, tasksRunning),
+                       cE('td', {key:10*i+7},
+                          !!app.isUntrusted ? 'true' : 'false'),
                        cE('td', {key:10*i+3}, app.image),
                        cE('td', {key:10*i+6}, version)
                       );
@@ -40,6 +42,7 @@ class TableApps extends React.Component {
 //                        cE('th', {key:3}, 'ID'),
                         cE('th', {key:5}, '#'),
                         cE('th', {key:6}, 'OK'),
+                        cE('th', {key:9}, 'Untrusted'),
                         cE('th', {key:4}, 'Image'),
                         cE('th', {key:7}, 'Version')
                        )

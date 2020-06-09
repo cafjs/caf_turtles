@@ -12,14 +12,15 @@ class ManagementPanel extends React.Component {
 
         this.visible = {};
         // Op -> [name, #instances, image]
-        this.visible[OpConstants.DEPLOY] = [true, true, true];
-        this.visible[OpConstants.FLEX] = [true, true, false];
-        this.visible[OpConstants.RESTART] = [true, false, false];
-        this.visible[OpConstants.DELETE] = [true, false, false];
+        this.visible[OpConstants.DEPLOY] = [true, true, true, true];
+        this.visible[OpConstants.FLEX] = [true, true, false, false];
+        this.visible[OpConstants.RESTART] = [true, false, false, false];
+        this.visible[OpConstants.DELETE] = [true, false, false, false];
 
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
         this.handleInstancesChange = this.handleInstancesChange.bind(this);
+        this.handleIsUntrustedChange = this.handleIsUntrustedChange.bind(this);
         this.handleChangeOp = this.handleChangeOp.bind(this);
         this.handleGo = this.handleGo.bind(this);
     }
@@ -29,8 +30,8 @@ class ManagementPanel extends React.Component {
             this.props.image && (typeof this.props.image === 'string') &&
             (typeof this.props.instances === 'number')) {
             AppActions.addApp(this.props.ctx, this.props.appName,
-                              this.props.image,
-                              this.props.instances, null);
+                              this.props.image, this.props.instances,
+                              this.props.isUntrusted, null);
         } else {
             console.log('Error: cannot deploy, missing inputs ' +
                         JSON.stringify({appName: this.props.appName,
@@ -115,14 +116,18 @@ class ManagementPanel extends React.Component {
         });
     }
 
+    handleIsUntrustedChange (e) {
+        AppActions.setLocalState(this.props.ctx, {isUntrusted: e});
+    }
+
     handleChangeOp(e) {
-        AppActions.setLocalState(this.props.ctx, { op: e });
+        AppActions.setLocalState(this.props.ctx, {op: e});
     }
 
     render() {
         var isVisible = this.visible[this.props.op];
         var fields = [
-            cE(rB.Col, { xs:12, sm:4, key:2355},
+            cE(rB.Col, { xs:12, sm:3, key:2355},
                cE(rB.FormGroup, {
                    controlId: 'appNameId'
                },
@@ -135,11 +140,11 @@ class ManagementPanel extends React.Component {
                   })
                  )
               ),
-            cE(rB.Col, { xs:12, sm:4, key:2356},
+            cE(rB.Col, { xs:12, sm:2, key:2356},
                cE(rB.FormGroup, {
                    controlId: 'instancesId'
                },
-                  cE(rB.ControlLabel, null, '# App Instances'),
+                  cE(rB.ControlLabel, null, '#Instances'),
                   cE(rB.FormControl, {
                       type: 'text',
                       value: this.props.instances,
@@ -153,13 +158,34 @@ class ManagementPanel extends React.Component {
                cE(rB.FormGroup, {
                    controlId: 'imageId'
                },
-                  cE(rB.ControlLabel, null, 'Docker image'),
+                  cE(rB.ControlLabel, null, 'Docker Image'),
                   cE(rB.FormControl, {
                       type: 'text',
                       value: this.props.image,
                       placeholder: EXAMPLE_IMAGE,
                       onChange: this.handleImageChange
                   })
+                 )
+              ),
+            cE(rB.Col, { xs:12, sm:3, key:2358},
+               cE(rB.FormGroup, {
+                   controlId: 'untrustedId'
+               },
+                  cE(rB.ControlLabel, null, 'Sandbox'),
+                  cE(rB.ButtonToolbar, {className: 'extra-margin-bottom-block'},
+                     cE(rB.ToggleButtonGroup, {
+                         type: 'radio',
+                         name: 'sandbox',
+                         value: this.props.isUntrusted,
+                         onChange: this.handleIsUntrustedChange
+                     },
+                        cE(rB.ToggleButton, {value: true}, 'On'),
+                        cE(rB.ToggleButton, {
+                            value: false,
+                            disabled: !this.props.privileged
+                        }, 'Off')
+                       )
+                    )
                  )
               )
         ].filter((x, i) => isVisible[i]);
