@@ -6,4 +6,4 @@ See https://www.cafjs.com
 
 ## Turtles: A Deployer Application
 
-Deploys `Caf.js` apps using Docker containers and a Kubernetes cluster.
+Deploys and monitors `Caf.js` apps using Docker containers and a Kubernetes cluster.
