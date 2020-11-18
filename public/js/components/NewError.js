@@ -16,7 +16,12 @@ class NewError extends React.Component {
     errorMessage() {
         if (this.props.error) {
             if (this.props.error.checkApp) {
-                return 'Unknown app: Register the app using the main menu';
+                return 'Unknown app: Register the app first using the main' +
+                    ' menu, i.e., the one in the top left corner.' +
+                    ' Registration initiates regular payments to cover' +
+                    ' infrastructure costs. To avoid future payments please' +
+                    ' unregister your app after permanently deleting' +
+                    ' it.';
             } else if (this.props.error.maxInstances) {
                 return 'Max number of instances exceeded';
             } else {
