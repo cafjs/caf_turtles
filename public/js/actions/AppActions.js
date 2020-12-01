@@ -1,10 +1,11 @@
 'use strict';
 
-var AppConstants = require('../constants/AppConstants');
-var json_rpc = require('caf_transport').json_rpc;
+const AppConstants = require('../constants/AppConstants');
+const json_rpc = require('caf_transport').json_rpc;
+const caf_cli =  require('caf_cli');
 
-var updateF = function(store, state) {
-    var d = {
+const updateF = function(store, state) {
+    const d = {
         type: AppConstants.APP_UPDATE,
         state: state
     };
@@ -12,8 +13,8 @@ var updateF = function(store, state) {
 };
 
 
-var errorF =  function(store, err) {
-    var d = {
+const errorF =  function(store, err) {
+    const d = {
         type: AppConstants.APP_ERROR,
         error: err
     };
@@ -21,12 +22,12 @@ var errorF =  function(store, err) {
 };
 
 
-var getNotifData = function(msg) {
+const getNotifData = function(msg) {
     return json_rpc.getMethodArgs(msg)[0];
 };
 
-var notifyF = function(store, message) {
-    var d = {
+const notifyF = function(store, message) {
+    const d = {
         type: AppConstants.APP_NOTIFICATION,
         state: getNotifData(message)
     };
@@ -34,22 +35,23 @@ var notifyF = function(store, message) {
 };
 
 
-var wsStatusF =  function(store, isClosed) {
-    var d = {
+const wsStatusF =  function(store, isClosed) {
+    const d = {
         type: AppConstants.WS_STATUS,
         isClosed: isClosed
     };
     store.dispatch(d);
 };
 
-var AppActions = {
+const AppActions = {
     initServer: function(ctx, initialData) {
         updateF(ctx.store, initialData);
     },
     async init(ctx) {
         try {
-            var data = await ctx.session.hello(ctx.session.getCacheKey())
-                    .getPromise();
+            const token = caf_cli.extractTokenFromURL(window.location.href);
+            const data = await ctx.session.hello(ctx.session.getCacheKey(),
+                                                 token).getPromise();
             updateF(ctx.store, data);
         } catch (err) {
             errorF(ctx.store, err);
@@ -77,11 +79,11 @@ var AppActions = {
 ['addApp', 'cleanError', 'deleteApp', 'flexApp', 'restartApp', 'statApps',
  'getState'].forEach(function(x) {
      AppActions[x] = async function() {
-         var args = Array.prototype.slice.call(arguments);
-         var ctx = args.shift();
+         const args = Array.prototype.slice.call(arguments);
+         const ctx = args.shift();
          try {
-             var data =  await ctx.session[x].apply(ctx.session, args)
-                     .getPromise();
+             const data =  await ctx.session[x].apply(ctx.session, args)
+                   .getPromise();
              updateF(ctx.store, data);
          } catch (err) {
              errorF(ctx.store, err);
