@@ -73,7 +73,8 @@ class MyApp extends React.Component {
                                   ctx: this.props.ctx,
                                   appName: this.state.appName,
                                   image: this.state.image,
-                                  instances: this.state.instances,
+                                  numberOfCAs: this.state.numberOfCAs,
+                                  keepData: this.state.keepData,
                                   privileged: this.state.privileged,
                                   isUntrusted: this.state.isUntrusted,
                                   op: this.state.op
@@ -85,7 +86,10 @@ class MyApp extends React.Component {
                               cE(rB.Panel.Title, null, "Deployed Applications")
                              ),
                            cE(rB.Panel.Body, null,
-                              cE(TableApps, {apps :this.state.apps})
+                              cE(TableApps, {
+                                  apps: this.state.apps,
+                                  privileged: this.state.privileged
+                              })
                              )
                           )
                        )

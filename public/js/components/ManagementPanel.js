@@ -1,8 +1,8 @@
-var React = require('react');
-var rB = require('react-bootstrap');
-var cE = React.createElement;
-var AppActions = require('../actions/AppActions');
-var OpConstants = require('../constants/OpConstants');
+const React = require('react');
+const rB = require('react-bootstrap');
+const cE = React.createElement;
+const AppActions = require('../actions/AppActions');
+const OpConstants = require('../constants/OpConstants');
 
 const EXAMPLE_IMAGE = 'gcr.io/cafjs-k8/root-helloworld';
 
@@ -11,15 +11,27 @@ class ManagementPanel extends React.Component {
         super(props);
 
         this.visible = {};
-        // Op -> [name, #instances, image]
-        this.visible[OpConstants.DEPLOY] = [true, true, true, true];
-        this.visible[OpConstants.FLEX] = [true, true, false, false];
-        this.visible[OpConstants.RESTART] = [true, false, false, false];
-        this.visible[OpConstants.DELETE] = [true, false, false, false];
+        // Op -> [name, #CAs, image, untrusted, manual, keepData]
+        this.visible[OpConstants.DEPLOY] = [
+            [true, false, true, true, true, false], //privileged
+            [true, false, true, false, false, false]
+        ];
+        this.visible[OpConstants.FLEX] = [
+            [true, true, false, false, false, false], //privileged
+            [false, false, false, false, false, false]
+        ];
+        this.visible[OpConstants.RESTART] = [
+            [true, false, false, false, false, false], //privileged
+            [true, false, false, false, false, false]
+        ];
+        this.visible[OpConstants.DELETE] = [
+            [true, false, false, false, false, true], //privileged
+            [true, false, false, false, false, false]
+        ];
 
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
-        this.handleInstancesChange = this.handleInstancesChange.bind(this);
+        this.handleNumberOfCAsChange = this.handleNumberOfCAsChange.bind(this);
         this.handleIsUntrustedChange = this.handleIsUntrustedChange.bind(this);
         this.handleChangeOp = this.handleChangeOp.bind(this);
         this.handleGo = this.handleGo.bind(this);
@@ -27,16 +39,17 @@ class ManagementPanel extends React.Component {
 
     doDeploy(ev) {
         if (this.props.appName && (typeof this.props.appName === 'string') &&
-            this.props.image && (typeof this.props.image === 'string') &&
-            (typeof this.props.instances === 'number')) {
-            AppActions.addApp(this.props.ctx, this.props.appName,
-                              this.props.image, this.props.instances,
-                              this.props.isUntrusted, null);
+            this.props.image && (typeof this.props.image === 'string')) {
+            const isUntrusted = this.props.privileged ?
+                this.props.isUntrusted :
+                true;
+
+             AppActions.addApp(this.props.ctx, this.props.appName,
+                              this.props.image, isUntrusted, null);
         } else {
             console.log('Error: cannot deploy, missing inputs ' +
                         JSON.stringify({appName: this.props.appName,
-                                        image: this.props.image,
-                                        instances: this.props.instances}));
+                                        image: this.props.image}));
             AppActions.setError(this.props.ctx,
                                 new Error('Cannot deploy, missing inputs'));
         }
@@ -44,9 +57,9 @@ class ManagementPanel extends React.Component {
 
     doFlex(ev) {
         if (this.props.appName && (typeof this.props.appName === 'string') &&
-            (typeof this.props.instances === 'number')) {
+            (typeof this.props.numberOfCAs === 'number')) {
             AppActions.flexApp(this.props.ctx, this.props.appName,
-                               this.props.instances);
+                               this.props.numberOfCAs);
         } else {
             console.log('Error: cannot flex, missing inputs ' +
                         JSON.stringify(this.props));
@@ -57,7 +70,8 @@ class ManagementPanel extends React.Component {
 
     doDelete(ev) {
         if (this.props.appName && (typeof this.props.appName === 'string')) {
-            AppActions.deleteApp(this.props.ctx, this.props.appName);
+            AppActions.deleteApp(this.props.ctx, this.props.appName,
+                                 this.props.keepData);
         } else {
             console.log('Error: cannot delete, missing inputs ' +
                         JSON.stringify(this.props));
@@ -108,12 +122,10 @@ class ManagementPanel extends React.Component {
         });
     }
 
-    handleInstancesChange (ev) {
-        var instances = parseInt(ev.target.value);
-        instances = (isNaN(instances) ? ev.target.value : instances);
-        AppActions.setLocalState(this.props.ctx, {
-            instances: instances
-        });
+    handleNumberOfCAsChange (ev) {
+        var numberOfCAs = parseInt(ev.target.value);
+        numberOfCAs = (isNaN(numberOfCAs) ? ev.target.value : numberOfCAs);
+        AppActions.setLocalState(this.props.ctx, {numberOfCAs});
     }
 
     handleIsUntrustedChange (e) {
@@ -125,9 +137,10 @@ class ManagementPanel extends React.Component {
     }
 
     render() {
-        var isVisible = this.visible[this.props.op];
-        var fields = [
-            cE(rB.Col, { xs:12, sm:3, key:2355},
+        const visibleIndex = this.props.privileged ? 0 : 1;
+        const isVisible = this.visible[this.props.op][visibleIndex];
+        const fields = [
+            cE(rB.Col, {xs:12, sm:3, key:2355},
                cE(rB.FormGroup, {
                    controlId: 'appNameId'
                },
@@ -140,21 +153,20 @@ class ManagementPanel extends React.Component {
                   })
                  )
               ),
-            cE(rB.Col, { xs:12, sm:2, key:2356},
+            cE(rB.Col, {xs:12, sm:2, key:2356},
                cE(rB.FormGroup, {
-                   controlId: 'instancesId'
+                   controlId: 'numberOfCAsId'
                },
-                  cE(rB.ControlLabel, null, '#Instances'),
+                  cE(rB.ControlLabel, null, '#CAs'),
                   cE(rB.FormControl, {
                       type: 'text',
-                      value: this.props.instances,
-                      readOnly: !this.props.privileged,
-                      placeholder: '1',
-                      onChange: this.handleInstancesChange
+                      value: this.props.numberOfCAs,
+                      placeholder: '0',
+                      onChange: this.handleNumberOfCAsChange
                   })
                  )
               ),
-            cE(rB.Col, { xs:12, sm:4, key:2357},
+            cE(rB.Col, {xs:12, sm:4, key:2357},
                cE(rB.FormGroup, {
                    controlId: 'imageId'
                },
@@ -167,11 +179,11 @@ class ManagementPanel extends React.Component {
                   })
                  )
               ),
-            cE(rB.Col, { xs:12, sm:3, key:2358},
+            cE(rB.Col, {xs:12, sm:3, key:2358},
                cE(rB.FormGroup, {
                    controlId: 'untrustedId'
                },
-                  cE(rB.ControlLabel, null, 'Sandbox'),
+                  cE(rB.ControlLabel, null, 'Untrusted'),
                   cE(rB.ButtonToolbar, {className: 'extra-margin-bottom-block'},
                      cE(rB.ToggleButtonGroup, {
                          type: 'radio',
@@ -200,15 +212,23 @@ class ManagementPanel extends React.Component {
                                name: 'operations',
                                value: this.props.op,
                                onChange: this.handleChangeOp
-                           },
-                              cE(rB.ToggleButton, {value: OpConstants.DEPLOY},
-                                 'Deploy'),
-                              cE(rB.ToggleButton, {value: OpConstants.FLEX},
-                                 'Flex'),
-                              cE(rB.ToggleButton, {value: OpConstants.RESTART},
-                                 'Reset'),
-                              cE(rB.ToggleButton, {value: OpConstants.DELETE},
-                                 'Delete')
+                           }, [
+                               cE(rB.ToggleButton, {key: 423,
+                                                    value: OpConstants.DEPLOY},
+                                  'Deploy'),
+                               this.props.privileged ?
+                                   cE(rB.ToggleButton, {
+                                       key: 424,
+                                       value: OpConstants.FLEX
+                                   }, 'Flex') :
+                                   null,
+                               cE(rB.ToggleButton, {key: 425,
+                                                    value: OpConstants.RESTART},
+                                  'Reset'),
+                               cE(rB.ToggleButton, {key: 426,
+                                                    value: OpConstants.DELETE},
+                                  'Delete')
+                           ].filter(x => !!x)
                              )
                           )
                        )

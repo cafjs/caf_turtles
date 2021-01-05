@@ -3,8 +3,9 @@ var OpConstants = require('../constants/OpConstants');
 
 var AppReducer = function(state, action) {
     if (typeof state === 'undefined') {
-        return  {counter: -1, apps : {}, instances : 1, isClosed: false,
+        return  {counter: -1, apps: {}, numberOfCAs: 0, isClosed: false,
                  image: '', appName: '', op: OpConstants.DEPLOY,
+                 keepData: false,
                  privileged: false, isUntrusted: true};
     } else {
         switch(action.type) {
