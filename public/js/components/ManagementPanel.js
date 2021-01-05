@@ -13,7 +13,7 @@ class ManagementPanel extends React.Component {
         this.visible = {};
         // Op -> [name, #CAs, image, untrusted, manual, keepData]
         this.visible[OpConstants.DEPLOY] = [
-            [true, false, true, true, true, false], //privileged
+            [true, false, true, true, false, false], //privileged
             [true, false, true, false, false, false]
         ];
         this.visible[OpConstants.FLEX] = [
@@ -28,11 +28,21 @@ class ManagementPanel extends React.Component {
             [true, false, false, false, false, true], //privileged
             [true, false, false, false, false, false]
         ];
+        this.visible[OpConstants.SET_MANUAL] = [
+            [true, false, false, false, true, false], //privileged
+            [false, false, false, false, false, false]
+        ];
+        this.visible[OpConstants.TRIGGER_FLEX] = [
+            [false, false, false, false, false, false], //privileged
+            [false, false, false, false, false, false]
+        ];
 
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
         this.handleNumberOfCAsChange = this.handleNumberOfCAsChange.bind(this);
         this.handleIsUntrustedChange = this.handleIsUntrustedChange.bind(this);
+        this.handleKeepDataChange = this.handleKeepDataChange.bind(this);
+        this.handleManualChange = this.handleManualChange.bind(this);
         this.handleChangeOp = this.handleChangeOp.bind(this);
         this.handleGo = this.handleGo.bind(this);
     }
@@ -44,7 +54,7 @@ class ManagementPanel extends React.Component {
                 this.props.isUntrusted :
                 true;
 
-             AppActions.addApp(this.props.ctx, this.props.appName,
+            AppActions.addApp(this.props.ctx, this.props.appName,
                               this.props.image, isUntrusted, null);
         } else {
             console.log('Error: cannot deploy, missing inputs ' +
@@ -69,7 +79,8 @@ class ManagementPanel extends React.Component {
     }
 
     doDelete(ev) {
-        if (this.props.appName && (typeof this.props.appName === 'string')) {
+        if ((this.props.appName && (typeof this.props.appName === 'string')) &&
+            (typeof this.props.keepData === 'boolean')) {
             AppActions.deleteApp(this.props.ctx, this.props.appName,
                                  this.props.keepData);
         } else {
@@ -91,6 +102,23 @@ class ManagementPanel extends React.Component {
         }
     }
 
+    doSetManual(ev) {
+        if (this.props.appName && (typeof this.props.appName === 'string')) {
+            AppActions.setManualFlex(this.props.ctx, this.props.appName,
+                                     this.props.isManual);
+        } else {
+            console.log('Error: cannot set manual flex, missing inputs ' +
+                        JSON.stringify(this.props));
+            AppActions.setError(this.props.ctx, new Error(
+                'Cannot set manual flex, missing inputs'
+            ));
+        }
+    }
+
+    doTriggerFlex(ev) {
+        AppActions.triggerFlex(this.props.ctx);
+    }
+
     handleGo(ev) {
         switch (this.props.op) {
         case OpConstants.DEPLOY:
@@ -104,6 +132,12 @@ class ManagementPanel extends React.Component {
             break;
         case OpConstants.DELETE:
             this.doDelete(ev);
+            break;
+        case OpConstants.SET_MANUAL:
+            this.doSetManual(ev);
+            break;
+        case OpConstants.TRIGGER_FLEX:
+            this.doTriggerFlex(ev);
             break;
         default:
             console.log('Error: Invalid op ' + this.props.op);
@@ -122,23 +156,32 @@ class ManagementPanel extends React.Component {
         });
     }
 
-    handleNumberOfCAsChange (ev) {
-        var numberOfCAs = parseInt(ev.target.value);
+    handleNumberOfCAsChange(ev) {
+        let numberOfCAs = parseInt(ev.target.value);
         numberOfCAs = (isNaN(numberOfCAs) ? ev.target.value : numberOfCAs);
         AppActions.setLocalState(this.props.ctx, {numberOfCAs});
     }
 
-    handleIsUntrustedChange (e) {
+    handleIsUntrustedChange(e) {
         AppActions.setLocalState(this.props.ctx, {isUntrusted: e});
+    }
+
+    handleKeepDataChange(e) {
+        AppActions.setLocalState(this.props.ctx, {keepData: e});
     }
 
     handleChangeOp(e) {
         AppActions.setLocalState(this.props.ctx, {op: e});
     }
 
+    handleManualChange(e) {
+        AppActions.setLocalState(this.props.ctx, {isManual: e});
+    }
+
     render() {
         const visibleIndex = this.props.privileged ? 0 : 1;
         const isVisible = this.visible[this.props.op][visibleIndex];
+
         const fields = [
             cE(rB.Col, {xs:12, sm:3, key:2355},
                cE(rB.FormGroup, {
@@ -192,10 +235,43 @@ class ManagementPanel extends React.Component {
                          onChange: this.handleIsUntrustedChange
                      },
                         cE(rB.ToggleButton, {value: true}, 'On'),
-                        cE(rB.ToggleButton, {
-                            value: false,
-                            disabled: !this.props.privileged
-                        }, 'Off')
+                        cE(rB.ToggleButton, {value: false}, 'Off')
+                       )
+                    )
+                 )
+              ),
+            cE(rB.Col, {xs:12, sm:3, key:2359},
+               cE(rB.FormGroup, {
+                   controlId: 'manualId'
+               },
+                  cE(rB.ControlLabel, null, 'Manual Flex'),
+                  cE(rB.ButtonToolbar, {className: 'extra-margin-bottom-block'},
+                     cE(rB.ToggleButtonGroup, {
+                         type: 'radio',
+                         name: 'sandbox',
+                         value: this.props.isManual,
+                         onChange: this.handleManualChange
+                     },
+                        cE(rB.ToggleButton, {value: true}, 'On'),
+                        cE(rB.ToggleButton, {value: false}, 'Off')
+                       )
+                    )
+                 )
+              ),
+            cE(rB.Col, {xs:12, sm:3, key:2369},
+               cE(rB.FormGroup, {
+                   controlId: 'keepDataId'
+               },
+                  cE(rB.ControlLabel, null, 'Keep data'),
+                  cE(rB.ButtonToolbar, {className: 'extra-margin-bottom-block'},
+                     cE(rB.ToggleButtonGroup, {
+                         type: 'radio',
+                         name: 'sandbox',
+                         value: this.props.keepData,
+                         onChange: this.handleKeepDataChange
+                     },
+                        cE(rB.ToggleButton, {value: true}, 'On'),
+                        cE(rB.ToggleButton, {value: false}, 'Off')
                        )
                     )
                  )
@@ -227,7 +303,19 @@ class ManagementPanel extends React.Component {
                                   'Reset'),
                                cE(rB.ToggleButton, {key: 426,
                                                     value: OpConstants.DELETE},
-                                  'Delete')
+                                  'Delete'),
+                               this.props.privileged ?
+                                   cE(rB.ToggleButton, {
+                                       key: 427,
+                                       value: OpConstants.SET_MANUAL
+                                   }, 'ManualFlex') :
+                                   null,
+                               this.props.privileged ?
+                                   cE(rB.ToggleButton, {
+                                       key: 428,
+                                       value: OpConstants.TRIGGER_FLEX
+                                   }, 'TriggerFlex') :
+                                   null
                            ].filter(x => !!x)
                              )
                           )

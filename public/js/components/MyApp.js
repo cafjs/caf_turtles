@@ -1,12 +1,12 @@
-var React = require('react');
-var rB = require('react-bootstrap');
-var AppActions = require('../actions/AppActions');
-var TableApps = require('./TableApps');
-var AppStatus = require('./AppStatus');
-var NewError = require('./NewError');
-var ManagementPanel = require('./ManagementPanel');
+const React = require('react');
+const rB = require('react-bootstrap');
+const AppActions = require('../actions/AppActions');
+const TableApps = require('./TableApps');
+const AppStatus = require('./AppStatus');
+const NewError = require('./NewError');
+const ManagementPanel = require('./ManagementPanel');
 
-var cE = React.createElement;
+const cE = React.createElement;
 
 class MyApp extends React.Component {
     constructor(props) {
@@ -75,6 +75,7 @@ class MyApp extends React.Component {
                                   image: this.state.image,
                                   numberOfCAs: this.state.numberOfCAs,
                                   keepData: this.state.keepData,
+                                  isManual: this.state.isManual,
                                   privileged: this.state.privileged,
                                   isUntrusted: this.state.isUntrusted,
                                   op: this.state.op

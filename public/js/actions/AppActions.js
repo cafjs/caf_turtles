@@ -77,7 +77,7 @@ const AppActions = {
 };
 
 ['addApp', 'cleanError', 'deleteApp', 'flexApp', 'restartApp', 'statApps',
- 'getState'].forEach(function(x) {
+ 'triggerFlex','getState', 'setManualFlex'].forEach(function(x) {
      AppActions[x] = async function() {
          const args = Array.prototype.slice.call(arguments);
          const ctx = args.shift();
