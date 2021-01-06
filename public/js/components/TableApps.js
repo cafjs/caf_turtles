@@ -48,7 +48,7 @@ class TableApps extends React.Component {
                            cE('td', {key:10*i+4}, instances),
                            cE('td', runningStyle, tasksRunning),
                            cE('td', {key:10*i+8}, numberOfCAs),
-                           this.props.privileged ?
+                           self.props.privileged ?
                                cE('td', {key:10*i+7}, summary) :
                                null,
                            cE('td', {key:10*i+3}, app.image),
