@@ -21,7 +21,7 @@ class TableApps extends React.Component {
             let instances = appProps && appProps.app &&
                 appProps.app.instances || 0;
 
-            const runningStyle  = (app.instances === tasksRunning) ?
+            const runningStyle  = (instances === tasksRunning) ?
                 {key:10*i+5, 'className':'text-success'} :
                 {key:10*i+5, 'className':'text-danger'};
 
