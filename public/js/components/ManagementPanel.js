@@ -11,30 +11,30 @@ class ManagementPanel extends React.Component {
         super(props);
 
         this.visible = {};
-        // Op -> [name, #CAs, image, untrusted, manual, keepData]
+        // Op -> [name, #CAs, image, untrusted, manual, keepData, disableCDN]
         this.visible[OpConstants.DEPLOY] = [
-            [true, false, true, true, false, false], //privileged
-            [true, false, true, false, false, false]
+            [true, false, true, true, false, false, true], //privileged
+            [true, false, true, false, false, false, true]
         ];
         this.visible[OpConstants.FLEX] = [
-            [true, true, false, false, false, false], //privileged
-            [false, false, false, false, false, false]
+            [true, true, false, false, false, false, false], //privileged
+            [false, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.RESTART] = [
-            [true, false, false, false, false, false], //privileged
-            [true, false, false, false, false, false]
+            [true, false, false, false, false, false, false], //privileged
+            [true, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.DELETE] = [
-            [true, false, false, false, false, true], //privileged
-            [true, false, false, false, false, false]
+            [true, false, false, false, false, true, false], //privileged
+            [true, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.SET_MANUAL] = [
-            [true, false, false, false, true, false], //privileged
-            [false, false, false, false, false, false]
+            [true, false, false, false, true, false, false], //privileged
+            [false, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.TRIGGER_FLEX] = [
-            [false, false, false, false, false, false], //privileged
-            [false, false, false, false, false, false]
+            [false, false, false, false, false, false, false], //privileged
+            [false, false, false, false, false, false, false]
         ];
 
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
@@ -43,6 +43,7 @@ class ManagementPanel extends React.Component {
         this.handleIsUntrustedChange = this.handleIsUntrustedChange.bind(this);
         this.handleKeepDataChange = this.handleKeepDataChange.bind(this);
         this.handleManualChange = this.handleManualChange.bind(this);
+        this.handleDisableCDN = this.handleDisableCDN.bind(this);
         this.handleChangeOp = this.handleChangeOp.bind(this);
         this.handleGo = this.handleGo.bind(this);
     }
@@ -55,7 +56,8 @@ class ManagementPanel extends React.Component {
                 true;
 
             AppActions.addApp(this.props.ctx, this.props.appName,
-                              this.props.image, isUntrusted, null);
+                              this.props.image, isUntrusted,
+                              this.props.disableCDN);
         } else {
             console.log('Error: cannot deploy, missing inputs ' +
                         JSON.stringify({appName: this.props.appName,
@@ -178,6 +180,10 @@ class ManagementPanel extends React.Component {
         AppActions.setLocalState(this.props.ctx, {isManual: e});
     }
 
+    handleDisableCDN(e) {
+        AppActions.setLocalState(this.props.ctx, {disableCDN: e});
+    }
+
     render() {
         const visibleIndex = this.props.privileged ? 0 : 1;
         const isVisible = this.visible[this.props.op][visibleIndex];
@@ -258,7 +264,7 @@ class ManagementPanel extends React.Component {
                     )
                  )
               ),
-            cE(rB.Col, {xs:12, sm:3, key:2369},
+            cE(rB.Col, {xs:12, sm:2, key:2369},
                cE(rB.FormGroup, {
                    controlId: 'keepDataId'
                },
@@ -269,6 +275,24 @@ class ManagementPanel extends React.Component {
                          name: 'sandbox',
                          value: this.props.keepData,
                          onChange: this.handleKeepDataChange
+                     },
+                        cE(rB.ToggleButton, {value: true}, 'On'),
+                        cE(rB.ToggleButton, {value: false}, 'Off')
+                       )
+                    )
+                 )
+              ),
+            cE(rB.Col, {xs:12, sm:2, key:23555},
+               cE(rB.FormGroup, {
+                   controlId: 'cdnId'
+               },
+                  cE(rB.ControlLabel, null, 'Disable CDN'),
+                  cE(rB.ButtonToolbar, {className: 'extra-margin-bottom-block'},
+                     cE(rB.ToggleButtonGroup, {
+                         type: 'radio',
+                         name: 'sandbox',
+                         value: this.props.disableCDN,
+                         onChange: this.handleDisableCDN
                      },
                         cE(rB.ToggleButton, {value: true}, 'On'),
                         cE(rB.ToggleButton, {value: false}, 'Off')

@@ -75,6 +75,7 @@ class MyApp extends React.Component {
                                   image: this.state.image,
                                   numberOfCAs: this.state.numberOfCAs,
                                   keepData: this.state.keepData,
+                                  disableCDN: this.state.disableCDN,
                                   isManual: this.state.isManual,
                                   privileged: this.state.privileged,
                                   isUntrusted: this.state.isUntrusted,

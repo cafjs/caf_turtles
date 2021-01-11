@@ -37,6 +37,8 @@ class TableApps extends React.Component {
             const toTF = (x) => x ? 'T' : 'F';
             const isUntrusted = appProps && appProps.app &&
                 toTF(appProps.app.isUntrusted) || '?';
+            const disableCDN =  appProps && appProps.app &&
+                toTF(appProps.app.isCDN && !appProps.app.appCDN) || '?';
             const isDedicated = appProps && appProps.redis &&
                 toTF(appProps.redis.isDedicatedVolume) || '?';
             const isManual = toTF(app.manual);
@@ -48,6 +50,7 @@ class TableApps extends React.Component {
                            cE('td', {key:10*i+4}, instances),
                            cE('td', runningStyle, tasksRunning),
                            cE('td', {key:10*i+8}, numberOfCAs),
+                           cE('td', {key:10*i+2}, disableCDN),
                            self.props.privileged ?
                                cE('td', {key:10*i+7}, summary) :
                                null,
@@ -70,6 +73,7 @@ class TableApps extends React.Component {
                          cE('th', {key:5}, '#'),
                          cE('th', {key:6}, 'OK'),
                          cE('th', {key:8}, '#CAs'),
+                         cE('th', {key: 3}, 'No CDN'),
                          this.props.privileged ?
                              cE('th', {key:9}, 'U/D/M') :
                              null,
