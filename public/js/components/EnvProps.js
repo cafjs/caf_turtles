@@ -9,7 +9,7 @@ class EnvProps extends React.Component {
     constructor(props) {
         super(props);
         this.doHide = this.doHide.bind(this);
-        this.doUpdateProps = this.doUpdateProps(this);
+        this.doUpdateProps = this.doUpdateProps.bind(this);
         this.submit = this.submit.bind(this);
         this.handleProperties = this.handleProperties.bind(this);
     }
@@ -53,7 +53,11 @@ class EnvProps extends React.Component {
                       'starting with a character, or values are not strings.' +
                       ` \n ${this.props.envPropsStr}`;
                 AppActions.setError(this.props.ctx, new Error(msg));
+            } else {
+                this.doHide();
             }
+        } else {
+            this.doHide();
         }
     }
 

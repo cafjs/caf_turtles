@@ -38,7 +38,9 @@ class TableApps extends React.Component {
             const isUntrusted = appProps && appProps.app &&
                 toTF(appProps.app.isUntrusted) || '?';
             const disableCDN =  appProps && appProps.app &&
-                toTF(appProps.app.isCDN && !appProps.app.appCDN) || '?';
+                  toTF(appProps.app.isCDN &&
+                       (!appProps.app.appCDN || (appProps.app.appCDN === '""'))
+                      ) || '?';
             const isDedicated = appProps && appProps.redis &&
                 toTF(appProps.redis.isDedicatedVolume) || '?';
             const isManual = toTF(app.manual);

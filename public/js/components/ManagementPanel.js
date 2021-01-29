@@ -238,7 +238,7 @@ class ManagementPanel extends React.Component {
                   })
                  )
               ),
-            cE(rB.Col, {xs:12, sm:3, key:2358},
+            cE(rB.Col, {xs:12, sm:2, key:2358},
                cE(rB.FormGroup, {
                    controlId: 'untrustedId'
                },
@@ -292,7 +292,7 @@ class ManagementPanel extends React.Component {
                     )
                  )
               ),
-            cE(rB.Col, {xs:12, sm:2, key:23555},
+            cE(rB.Col, {xs:6, sm:2, key:23555},
                cE(rB.FormGroup, {
                    controlId: 'cdnId'
                },
@@ -310,11 +310,11 @@ class ManagementPanel extends React.Component {
                     )
                  )
               ),
-            cE(rB.Col, {xs:12, sm:2, key:2355669},
+            cE(rB.Col, {xs:6, sm:1, key:2355669},
                cE(rB.FormGroup, {
                    controlId: 'envPropsId'
                },
-                  cE(rB.ControlLabel, null, 'Properties'),
+                  cE(rB.ControlLabel, null, 'Props'),
                   cE(rB.ButtonToolbar, {className: 'extra-margin-bottom-block'},
                      cE(rB.Button, {
                          bsStyle: 'primary',
