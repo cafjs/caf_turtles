@@ -6,7 +6,8 @@ var AppReducer = function(state, action) {
         return  {counter: -1, apps: {}, numberOfCAs: 0, isClosed: false,
                  image: '', appName: '', op: OpConstants.DEPLOY,
                  keepData: false, isManual: false, disableCDN: false,
-                 privileged: false, isUntrusted: true};
+                 privileged: false, isUntrusted: true, showEnvProps: false,
+                 envPropsStr: ''};
     } else {
         switch(action.type) {
         case AppConstants.APP_UPDATE:

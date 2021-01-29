@@ -5,6 +5,7 @@ const TableApps = require('./TableApps');
 const AppStatus = require('./AppStatus');
 const NewError = require('./NewError');
 const ManagementPanel = require('./ManagementPanel');
+const EnvProps = require('./EnvProps');
 
 const cE = React.createElement;
 
@@ -38,6 +39,12 @@ class MyApp extends React.Component {
     render() {
         return cE("div", {className: "container-fluid"},
                   cE(NewError, {ctx: this.props.ctx, error: this.state.error}),
+                  cE(EnvProps, {
+                      ctx: this.props.ctx,
+                      privileged: this.state.privileged,
+                      envPropsStr: this.state.envPropsStr,
+                      showEnvProps: this.state.showEnvProps
+                  }),
                   cE(rB.Panel, null,
                      cE(rB.Panel.Heading, null,
                         cE(rB.Panel.Title, null,
@@ -79,7 +86,8 @@ class MyApp extends React.Component {
                                   isManual: this.state.isManual,
                                   privileged: this.state.privileged,
                                   isUntrusted: this.state.isUntrusted,
-                                  op: this.state.op
+                                  op: this.state.op,
+                                  envPropsStr: this.state.envPropsStr
                               })
                              )
                           ),

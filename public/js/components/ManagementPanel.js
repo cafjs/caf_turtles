@@ -11,30 +11,31 @@ class ManagementPanel extends React.Component {
         super(props);
 
         this.visible = {};
-        // Op -> [name, #CAs, image, untrusted, manual, keepData, disableCDN]
+        // Op -> [name, #CAs, image, untrusted, manual, keepData, disableCDN,
+        //        envProps]
         this.visible[OpConstants.DEPLOY] = [
-            [true, false, true, true, false, false, true], //privileged
-            [true, false, true, false, false, false, true]
+            [true, false, true, true, false, false, true, true], //privileged
+            [true, false, true, false, false, false, true, true]
         ];
         this.visible[OpConstants.FLEX] = [
-            [true, true, false, false, false, false, false], //privileged
-            [false, false, false, false, false, false, false]
+            [true, true, false, false, false, false, false, false], //privileged
+            [false, false, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.RESTART] = [
-            [true, false, false, false, false, false, false], //privileged
-            [true, false, false, false, false, false, false]
+            [true, false, false, false, false, false, false, false],//privileged
+            [true, false, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.DELETE] = [
-            [true, false, false, false, false, true, false], //privileged
-            [true, false, false, false, false, false, false]
+            [true, false, false, false, false, true, false, false], //privileged
+            [true, false, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.SET_MANUAL] = [
-            [true, false, false, false, true, false, false], //privileged
-            [false, false, false, false, false, false, false]
+            [true, false, false, false, true, false, false, false], //privileged
+            [false, false, false, false, false, false, false, false]
         ];
         this.visible[OpConstants.TRIGGER_FLEX] = [
-            [false, false, false, false, false, false, false], //privileged
-            [false, false, false, false, false, false, false]
+            [false, false, false, false, false, false, false, false], //privil
+            [false, false, false, false, false, false, false, false]
         ];
 
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
@@ -46,6 +47,11 @@ class ManagementPanel extends React.Component {
         this.handleDisableCDN = this.handleDisableCDN.bind(this);
         this.handleChangeOp = this.handleChangeOp.bind(this);
         this.handleGo = this.handleGo.bind(this);
+        this.doEditProps = this.doEditProps.bind(this);
+    }
+
+    doEditProps(ev) {
+        AppActions.setLocalState(this.props.ctx, {showEnvProps: true});
     }
 
     doDeploy(ev) {
@@ -55,9 +61,13 @@ class ManagementPanel extends React.Component {
                 this.props.isUntrusted :
                 true;
 
+            const envProps = this.props.envPropsStr ?
+                JSON.parse(this.props.envPropsStr) :
+                null;
+
             AppActions.addApp(this.props.ctx, this.props.appName,
                               this.props.image, isUntrusted,
-                              this.props.disableCDN);
+                              this.props.disableCDN, envProps);
         } else {
             console.log('Error: cannot deploy, missing inputs ' +
                         JSON.stringify({appName: this.props.appName,
@@ -297,6 +307,19 @@ class ManagementPanel extends React.Component {
                         cE(rB.ToggleButton, {value: true}, 'On'),
                         cE(rB.ToggleButton, {value: false}, 'Off')
                        )
+                    )
+                 )
+              ),
+            cE(rB.Col, {xs:12, sm:2, key:2355669},
+               cE(rB.FormGroup, {
+                   controlId: 'envPropsId'
+               },
+                  cE(rB.ControlLabel, null, 'Properties'),
+                  cE(rB.ButtonToolbar, {className: 'extra-margin-bottom-block'},
+                     cE(rB.Button, {
+                         bsStyle: 'primary',
+                         onClick: this.doEditProps
+                     }, (this.props.envPropsStr ? 'Show': 'Edit'))
                     )
                  )
               )
