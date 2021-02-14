@@ -7,6 +7,7 @@
   "dependencies": {
       "caf_react" :"^0.4.0",
       "caf_deploy" : "^0.4.0",
+      "kubernetes-client": "^8.3.6",
       "caf_core": "^0.4.0",
       "caf_transport" : "^0.4.0",
       "caf_cli": "^0.4.0",
@@ -24,9 +25,7 @@
     "scripts": {
        "start" : "node ./index.js",
         "test": "node ./node_modules/.bin/nodeunit",
-        "build-js" : "browserify  -d public/js/main.js -o public/js/build.js",
-        "build-min-js" : "export NODE_ENV=production; browserify public/js/main.js | uglifyjs > public/js/build.min.js",
-        "build": "yarn run build-js && yarn run build-min-js"
+        "build": "./bin/build.sh"
     },
    "main": "index",
   "engines": { "node": ">= 8.0.0" }
