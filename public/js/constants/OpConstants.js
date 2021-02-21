@@ -4,5 +4,6 @@ module.exports = {
     RESTART: 2,
     DELETE: 3,
     SET_MANUAL: 4,
-    TRIGGER_FLEX: 5
+    TRIGGER_FLEX: 5,
+    CHANGE_IMAGE: 6
 };

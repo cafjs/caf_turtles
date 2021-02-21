@@ -27,6 +27,17 @@ class TableApps extends React.Component {
 
             const version = app.stat && app.stat.version || '?';
 
+            const parseImage = function(im) {
+                try {
+                    return JSON.parse(im);
+                } catch (ex) {
+                    return im;
+                }
+            };
+
+            const image = appProps && appProps.app && appProps.app.image  &&
+                parseImage(appProps.app.image) || '?';
+
             const isIncubator = appProps && appProps.app &&
                 appProps.app.isIncubator;
             if (isIncubator) {
@@ -56,7 +67,7 @@ class TableApps extends React.Component {
                            self.props.privileged ?
                                cE('td', {key:10*i+7}, summary) :
                                null,
-                           cE('td', {key:10*i+3}, app.image),
+                           cE('td', {key:10*i+3}, image),
                            cE('td', {key:10*i+6}, version)
                        ].filter((x) => !!x)
                       );

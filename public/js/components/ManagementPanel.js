@@ -37,6 +37,11 @@ class ManagementPanel extends React.Component {
             [false, false, false, false, false, false, false, false], //privil
             [false, false, false, false, false, false, false, false]
         ];
+        this.visible[OpConstants.CHANGE_IMAGE] = [
+            [true, false, true, false, false, false, false, false], //privil
+            [true, false, true, false, false, false, false, false]
+        ];
+
 
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
@@ -131,6 +136,21 @@ class ManagementPanel extends React.Component {
         AppActions.triggerFlex(this.props.ctx);
     }
 
+    doChangeImage(ev) {
+        if (this.props.image && (typeof this.props.image === 'string') &&
+            this.props.appName && (typeof this.props.appName === 'string')) {
+            AppActions.changeImage(this.props.ctx, this.props.appName,
+                                   this.props.image);
+        } else {
+            console.log('Error: cannot change image, missing inputs ' +
+                        JSON.stringify(this.props));
+            AppActions.setError(
+                this.props.ctx,
+                new Error('Cannot change image, missing inputs')
+            );
+        }
+    }
+
     handleGo(ev) {
         switch (this.props.op) {
         case OpConstants.DEPLOY:
@@ -150,6 +170,9 @@ class ManagementPanel extends React.Component {
             break;
         case OpConstants.TRIGGER_FLEX:
             this.doTriggerFlex(ev);
+            break;
+        case OpConstants.CHANGE_IMAGE:
+            this.doChangeImage(ev);
             break;
         default:
             console.log('Error: Invalid op ' + this.props.op);
@@ -348,6 +371,10 @@ class ManagementPanel extends React.Component {
                                cE(rB.ToggleButton, {key: 425,
                                                     value: OpConstants.RESTART},
                                   'Reset'),
+                               cE(rB.ToggleButton, {
+                                   key: 429,
+                                   value: OpConstants.CHANGE_IMAGE
+                               }, 'Change Image'),
                                cE(rB.ToggleButton, {key: 426,
                                                     value: OpConstants.DELETE},
                                   'Delete'),
