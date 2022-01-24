@@ -41,6 +41,24 @@
             ]
         },
         {
+            "module": "caf_webhook#plug_ca",
+            "name": "webhook",
+            "description": "Manages webhooks for a CA",
+            "env" : {
+                "maxRetries" : "$._.env.maxRetries",
+                "retryDelay" : "$._.env.retryDelay"
+            },
+            "components" : [
+                {
+                    "module": "caf_webhook#proxy",
+                    "name": "proxy",
+                    "description": "Allows access to a webhook service",
+                    "env" : {
+                    }
+                }
+            ]
+        },
+        {
             "name": "handler",
             "components" : [
                 {
