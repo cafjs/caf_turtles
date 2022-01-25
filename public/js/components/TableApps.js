@@ -52,8 +52,7 @@ class TableApps extends React.Component {
                   toTF(appProps.app.isCDN &&
                        (!appProps.app.appCDN || (appProps.app.appCDN === '""'))
                       ) || '?';
-            const isWebhook = appProps && appProps.app &&
-                toTF(appProps.app.isWebhook) || '?';
+            const isWebhook = app && toTF(app.isWebhook) || '?';
             const isDedicated = appProps && appProps.redis &&
                 toTF(appProps.redis.isDedicatedVolume) || '?';
             const isManual = toTF(app.manual);
