@@ -6,6 +6,7 @@ const AppStatus = require('./AppStatus');
 const NewError = require('./NewError');
 const ManagementPanel = require('./ManagementPanel');
 const EnvProps = require('./EnvProps');
+const DisplayWebhook = require('./DisplayWebhook');
 
 const cE = React.createElement;
 
@@ -39,6 +40,14 @@ class MyApp extends React.Component {
     render() {
         return cE("div", {className: "container-fluid"},
                   cE(NewError, {ctx: this.props.ctx, error: this.state.error}),
+                  cE(DisplayWebhook,  {
+                      ctx: this.props.ctx,
+                      showWebhook: this.state.showWebhook,
+                      appName: this.state.appName,
+                      secret: this.state.secret,
+                      webhookActive: this.state.webhookActive,
+                      fullName: this.state.fullName
+                  }),
                   cE(EnvProps, {
                       ctx: this.props.ctx,
                       privileged: this.state.privileged,

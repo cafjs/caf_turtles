@@ -5,5 +5,6 @@ module.exports = {
     DELETE: 3,
     SET_MANUAL: 4,
     TRIGGER_FLEX: 5,
-    CHANGE_IMAGE: 6
+    CHANGE_IMAGE: 6,
+    WEBHOOK: 7
 };

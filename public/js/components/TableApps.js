@@ -52,6 +52,8 @@ class TableApps extends React.Component {
                   toTF(appProps.app.isCDN &&
                        (!appProps.app.appCDN || (appProps.app.appCDN === '""'))
                       ) || '?';
+            const isWebhook = appProps && appProps.app &&
+                toTF(appProps.app.isWebhook) || '?';
             const isDedicated = appProps && appProps.redis &&
                 toTF(appProps.redis.isDedicatedVolume) || '?';
             const isManual = toTF(app.manual);
@@ -64,6 +66,7 @@ class TableApps extends React.Component {
                            cE('td', runningStyle, tasksRunning),
                            cE('td', {key:10*i+8}, numberOfCAs),
                            cE('td', {key:10*i+2}, disableCDN),
+                           cE('td', {key:1006*i+2}, isWebhook),
                            self.props.privileged ?
                                cE('td', {key:10*i+7}, summary) :
                                null,
@@ -87,6 +90,7 @@ class TableApps extends React.Component {
                          cE('th', {key:6}, 'OK'),
                          cE('th', {key:8}, '#CAs'),
                          cE('th', {key: 3}, 'No CDN'),
+                         cE('th', {key:23}, 'Webhook'),
                          this.props.privileged ?
                              cE('th', {key:9}, 'U/D/M') :
                              null,

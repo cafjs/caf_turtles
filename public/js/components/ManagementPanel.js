@@ -41,7 +41,10 @@ class ManagementPanel extends React.Component {
             [true, false, true, false, false, false, false, false], //privil
             [true, false, true, false, false, false, false, false]
         ];
-
+        this.visible[OpConstants.WEBHOOK] = [
+            [true, false, false, false, false, false, false, false], //privil
+            [true, false, false, false, false, false, false, false]
+        ];
 
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
@@ -112,10 +115,21 @@ class ManagementPanel extends React.Component {
         if (this.props.appName && (typeof this.props.appName === 'string')) {
             AppActions.restartApp(this.props.ctx, this.props.appName);
         } else {
-            console.log('Error: cannot delete, missing inputs ' +
+            console.log('Error: cannot restart, missing inputs ' +
                         JSON.stringify(this.props));
             AppActions.setError(this.props.ctx,
                                 new Error('Cannot restart, missing inputs'));
+        }
+    }
+
+    doWebhook(ev) {
+        if (this.props.appName && (typeof this.props.appName === 'string')) {
+            AppActions.setLocalState(this.props.ctx, {showWebhook: true});
+        } else {
+            console.log('Error: cannot set webhook, missing inputs ' +
+                        JSON.stringify(this.props));
+            AppActions.setError(this.props.ctx,
+                                new Error('Cannot set webhook, missing input'));
         }
     }
 
@@ -173,6 +187,9 @@ class ManagementPanel extends React.Component {
             break;
         case OpConstants.CHANGE_IMAGE:
             this.doChangeImage(ev);
+            break;
+        case OpConstants.WEBHOOK:
+            this.doWebhook(ev);
             break;
         default:
             console.log('Error: Invalid op ' + this.props.op);
@@ -371,6 +388,9 @@ class ManagementPanel extends React.Component {
                                cE(rB.ToggleButton, {key: 425,
                                                     value: OpConstants.RESTART},
                                   'Reset'),
+                               cE(rB.ToggleButton, {key: 525,
+                                                    value: OpConstants.WEBHOOK},
+                                  'Webhook'),
                                cE(rB.ToggleButton, {
                                    key: 429,
                                    value: OpConstants.CHANGE_IMAGE

@@ -7,7 +7,8 @@ var AppReducer = function(state, action) {
                  image: '', appName: '', op: OpConstants.DEPLOY,
                  keepData: false, isManual: false, disableCDN: false,
                  privileged: false, isUntrusted: true, showEnvProps: false,
-                 envPropsStr: ''};
+                 envPropsStr: '', showWebhook: false, secret: '',
+                 webhookActive: false};
     } else {
         switch(action.type) {
         case AppConstants.APP_UPDATE:
